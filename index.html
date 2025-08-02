@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Mi Horario Universitario</title>
   <link rel="stylesheet" href="estilos.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
   <h1>HORARIO UNIVERSITARIO</h1>
@@ -11,6 +12,7 @@
   <div class="controlador">
     <select id="selectorHorario"></select>
     <button onclick="crearNuevoHorario()">+ Nuevo horario</button>
+    <button onclick="exportarPDF()">📄 Exportar como PDF</button>
   </div>
 
   <form id="formulario">
@@ -27,10 +29,9 @@
       <label><input type="checkbox" name="dia" value="5"> Sábado</label>
       <label><input type="checkbox" name="dia" value="6"> Domingo</label>
     </div>
-
-    <input type="time" id="horaInicio" placeholder="Hora inicio">
-    <input type="time" id="horaFin" placeholder="Hora fin">
-
+    <span>Coloca tu hora aquí:</span>
+    <input type="time" id="horaInicio">
+    <input type="time" id="horaFin">
     <label><input type="checkbox" id="virtual"> Curso Virtual 24/7</label>
 
     <button type="submit">Agregar curso</button>
@@ -49,13 +50,13 @@
         <th>Domingo</th>
       </tr>
     </thead>
-    <tbody id="cuerpoHorario">
+    <tbody>
       <tr id="filaAsincronico">
         <td><strong>Asincrónicos 24/7</strong></td>
         <td colspan="7" id="virtualesCelda"></td>
       </tr>
-      <!-- Horario dinámico se inserta aquí -->
     </tbody>
+    <tbody id="cuerpoHorario"></tbody>
   </table>
 
   <footer>

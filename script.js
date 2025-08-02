@@ -27,7 +27,6 @@ function renderHorario() {
   const bloques = horarios[horarioActual].bloques;
   const horasUsadas = new Set();
 
-  
   bloques.forEach(b => {
     for (let h = b.hInicio; h < b.hFin; h += 0.25) {
       horasUsadas.add(h.toFixed(2));
@@ -49,7 +48,6 @@ function renderHorario() {
     cuerpo.appendChild(fila);
   });
 
-  
   bloques.forEach((c, idx) => {
     for (let h = c.hInicio; h < c.hFin; h += 0.25) {
       const index = horasOrdenadas.indexOf(parseFloat(h.toFixed(2)));
@@ -68,7 +66,6 @@ function renderHorario() {
     }
   });
 
-  
   horarios[horarioActual].asincronos.forEach((c, index) => {
     const contenedor = document.createElement("div");
     contenedor.className = `ocupado virtual ${getColor(c.nombre)}`;
@@ -164,3 +161,20 @@ selector.addEventListener("change", e => {
 
 if (!horarios[horarioActual]) horarios[horarioActual] = { bloques: [], asincronos: [] };
 guardar();
+
+
+// 📄 FUNCIÓN PARA EXPORTAR A PDF
+function exportarPDF() {
+  const tabla = document.getElementById("tablaHorario");
+  const nombreArchivo = horarioActual.replace(/\s+/g, '_') + ".pdf";
+
+  const opciones = {
+    margin:       0.5,
+    filename:     nombreArchivo,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+  };
+
+  html2pdf().set(opciones).from(tabla).save();
+}
