@@ -26,6 +26,12 @@ form {
   margin-bottom: 20px;
 }
 
+.dias-checks {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
 input, select, button, label {
   padding: 8px;
   font-size: 14px;
@@ -52,6 +58,7 @@ thead th {
 td.ocupado {
   color: white;
   font-weight: bold;
+  transition: all 0.3s ease;
 }
 
 .bg-curso-0 { background-color: #3498db; }
@@ -65,6 +72,16 @@ td.ocupado {
 .virtual {
   border: 2px dashed #222;
   font-style: italic;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 6px;
+}
+
+.virtual button, td.ocupado button {
+  margin-top: 5px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 footer {
@@ -94,11 +111,6 @@ footer a:hover {
 
   table {
     font-size: 12px;
-  }
-
-  footer {
-    font-size: 12px;
-    padding: 10px;
   }
 
   input, select, button, label {

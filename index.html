@@ -15,21 +15,25 @@
 
   <form id="formulario">
     <input type="text" id="curso" placeholder="Nombre del curso" required>
-    <input type="text" id="profesor" placeholder="Nombre del profesor" required>
-    <select id="dia" required>
-      <option value="">Selecciona día</option>
-      <option value="0">Lunes</option>
-      <option value="1">Martes</option>
-      <option value="2">Miércoles</option>
-      <option value="3">Jueves</option>
-      <option value="4">Viernes</option>
-      <option value="5">Sábado</option>
-      <option value="6">Domingo</option>
-    </select>
-    <input type="time" id="horaInicio">
-    <input type="time" id="horaFin">
-    <label><input type="checkbox" id="virtual"> Virtual 24/7</label>
-    <button type="submit">Agregar</button>
+    <input type="text" id="profesor" placeholder="Nombre del profesor (opcional)">
+    
+    <div>
+      <label>Días:</label><br>
+      <label><input type="checkbox" name="dia" value="0"> Lunes</label>
+      <label><input type="checkbox" name="dia" value="1"> Martes</label>
+      <label><input type="checkbox" name="dia" value="2"> Miércoles</label>
+      <label><input type="checkbox" name="dia" value="3"> Jueves</label>
+      <label><input type="checkbox" name="dia" value="4"> Viernes</label>
+      <label><input type="checkbox" name="dia" value="5"> Sábado</label>
+      <label><input type="checkbox" name="dia" value="6"> Domingo</label>
+    </div>
+
+    <input type="time" id="horaInicio" placeholder="Hora inicio">
+    <input type="time" id="horaFin" placeholder="Hora fin">
+
+    <label><input type="checkbox" id="virtual"> Curso Virtual 24/7</label>
+
+    <button type="submit">Agregar curso</button>
   </form>
 
   <table id="tablaHorario">
@@ -45,12 +49,12 @@
         <th>Domingo</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="cuerpoHorario">
       <tr id="filaAsincronico">
         <td><strong>Asincrónicos 24/7</strong></td>
         <td colspan="7" id="virtualesCelda"></td>
       </tr>
-      <tbody id="cuerpoHorario"></tbody>
+      <!-- Horario dinámico se inserta aquí -->
     </tbody>
   </table>
 

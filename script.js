@@ -9,13 +9,6 @@ const coloresCurso = {};
 let colorIndex = 0;
 const MAX_COLORES = 7;
 
-const horasDecimal = [];
-let hora = 8.5;
-while (hora <= 23) {
-  horasDecimal.push(hora);
-  hora += 0.25;
-}
-
 function cargarSelector() {
   selector.innerHTML = "";
   for (let nombre in horarios) {
@@ -31,50 +24,73 @@ function renderHorario() {
   cuerpo.innerHTML = "";
   celdaVirtuales.innerHTML = "";
 
-  horasDecimal.forEach(h => {
+  const bloques = horarios[horarioActual].bloques;
+  const horasUsadas = new Set();
+
+  
+  bloques.forEach(b => {
+    for (let h = b.hInicio; h < b.hFin; h += 0.25) {
+      horasUsadas.add(h.toFixed(2));
+    }
+  });
+
+  const horasOrdenadas = Array.from(horasUsadas).map(parseFloat).sort((a, b) => a - b);
+
+  horasOrdenadas.forEach(h => {
     const fila = document.createElement("tr");
     const celdaHora = document.createElement("td");
     celdaHora.textContent = `${formatoHora(h)} - ${formatoHora(h + 0.25)}`;
     fila.appendChild(celdaHora);
+
     for (let i = 0; i < 7; i++) {
       fila.appendChild(document.createElement("td"));
     }
+
     cuerpo.appendChild(fila);
   });
 
-  horarios[horarioActual].asincronos.forEach((c, index) => {
-    const span = document.createElement("div");
-    span.className = `ocupado virtual ${getColor(c.nombre)}`;
-    span.style.margin = "4px";
-    span.style.display = "inline-block";
-    span.innerHTML = `<strong>${c.nombre}</strong><br><small>${c.profesor}</small>`;
-    span.addEventListener("contextmenu", e => {
-      e.preventDefault();
-      if (confirm(`¿Eliminar curso virtual: ${c.nombre}?`)) {
-        horarios[horarioActual].asincronos.splice(index, 1);
-        guardar();
-      }
-    });
-    celdaVirtuales.appendChild(span);
+  
+  bloques.forEach((c, idx) => {
+    for (let h = c.hInicio; h < c.hFin; h += 0.25) {
+      const index = horasOrdenadas.indexOf(parseFloat(h.toFixed(2)));
+      if (index === -1) continue;
+
+      c.dias.forEach(d => {
+        const fila = cuerpo.children[index];
+        const celda = fila.children[d + 1];
+        celda.innerHTML = `
+          <strong>${c.nombre}</strong><br>
+          ${c.profesor ? `<small>${c.profesor}</small><br>` : ""}
+          <button onclick="eliminarBloque(${idx})">🗑️</button>
+        `;
+        celda.className = `ocupado ${getColor(c.nombre)} ${c.virtual ? 'virtual' : ''}`;
+      });
+    }
   });
 
-  horarios[horarioActual].bloques.forEach((c, idx) => {
-    horasDecimal.forEach((h, i) => {
-      if (h >= c.hInicio && h < c.hFin) {
-        const fila = cuerpo.children[i];
-        const celda = fila.children[c.dia + 1];
-        celda.innerHTML = `<strong>${c.nombre}</strong><br><small>${c.profesor}</small>`;
-        celda.className = `ocupado ${getColor(c.nombre)} ${c.virtual ? 'virtual' : ''}`;
-        celda.addEventListener("contextmenu", e => {
-          e.preventDefault();
-          if (confirm(`¿Eliminar todo el bloque de: ${c.nombre}?`)) {
-            horarios[horarioActual].bloques = horarios[horarioActual].bloques.filter((_, j) => j !== idx);
-            guardar();
-          }
-        });
-      }
-    });
+  
+  horarios[horarioActual].asincronos.forEach((c, index) => {
+    const contenedor = document.createElement("div");
+    contenedor.className = `ocupado virtual ${getColor(c.nombre)}`;
+    contenedor.style.margin = "4px";
+    contenedor.style.display = "inline-block";
+    contenedor.innerHTML = `
+      <strong>${c.nombre}</strong><br>
+      ${c.profesor ? `<small>${c.profesor}</small><br>` : ""}
+      <button onclick="eliminarAsincronico(${index})">🗑️</button>
+    `;
+    celdaVirtuales.appendChild(contenedor);
   });
+}
+
+function eliminarBloque(idx) {
+  horarios[horarioActual].bloques.splice(idx, 1);
+  guardar();
+}
+
+function eliminarAsincronico(index) {
+  horarios[horarioActual].asincronos.splice(index, 1);
+  guardar();
 }
 
 function formatoHora(decimal) {
@@ -102,21 +118,21 @@ form.addEventListener("submit", e => {
   e.preventDefault();
   const nombre = document.getElementById("curso").value.trim();
   const profesor = document.getElementById("profesor").value.trim();
-  const dia = parseInt(document.getElementById("dia").value);
+  const dias = Array.from(document.querySelectorAll('input[name="dia"]:checked')).map(x => parseInt(x.value));
   const hIni = document.getElementById("horaInicio").value;
   const hFin = document.getElementById("horaFin").value;
   const esVirtual = document.getElementById("virtual").checked;
 
-  if (!nombre || !profesor) return alert("Completa los datos");
+  if (!nombre) return alert("Falta el nombre del curso");
 
   if (esVirtual) {
     horarios[horarioActual].asincronos.push({ nombre, profesor });
   } else {
-    if (isNaN(dia) || !hIni || !hFin) return alert("Faltan datos de horario");
+    if (dias.length === 0 || !hIni || !hFin) return alert("Faltan datos del horario");
     horarios[horarioActual].bloques.push({
       nombre,
       profesor,
-      dia,
+      dias,
       hInicio: aDecimal(hIni),
       hFin: aDecimal(hFin),
       virtual: false
