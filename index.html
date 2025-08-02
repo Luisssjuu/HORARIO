@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Horario Universitario</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <h1>HORARIO UNIVERSITARIO</h1>
+
+  <div class="controlador">
+    <select id="selectorHorario"></select>
+    <button onclick="crearNuevoHorario()">+ Nuevo horario</button>
+  </div>
+
+  <form id="formulario">
+    <input type="text" id="curso" placeholder="Nombre del curso" required>
+    <input type="text" id="profesor" placeholder="Nombre del profesor" required>
+    <select id="dia" required>
+      <option value="">Selecciona día</option>
+      <option value="0">Lunes</option>
+      <option value="1">Martes</option>
+      <option value="2">Miércoles</option>
+      <option value="3">Jueves</option>
+      <option value="4">Viernes</option>
+      <option value="5">Sábado</option>
+      <option value="6">Domingo</option>
+    </select>
+    <input type="time" id="horaInicio">
+    <input type="time" id="horaFin">
+    <label><input type="checkbox" id="virtual"> Virtual 24/7</label>
+    <button type="submit">Agregar</button>
+  </form>
+
+  <table id="tablaHorario">
+    <thead>
+      <tr>
+        <th>Hora</th>
+        <th>Lunes</th>
+        <th>Martes</th>
+        <th>Miércoles</th>
+        <th>Jueves</th>
+        <th>Viernes</th>
+        <th>Sábado</th>
+        <th>Domingo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="filaAsincronico">
+        <td><strong>Asincrónicos 24/7</strong></td>
+        <td colspan="7" id="virtualesCelda"></td>
+      </tr>
+      <tbody id="cuerpoHorario"></tbody>
+    </tbody>
+  </table>
+
+  <footer>
+    <p>Desarrollado por el Ing. 👨‍💻 <strong>Luis Alberto Villar Vásquez</strong></p>
+    <p>
+      GitHub: <a href="https://github.com/Luisssjuu" target="_blank">Luisssjuu</a> |
+      Correo: <a href="mailto:villarvasquezl@gmail.com">villarvasquezl@gmail.com</a>
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
